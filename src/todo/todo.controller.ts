@@ -12,7 +12,7 @@ import {
   Res,
   ValidationPipe,
 } from "@nestjs/common";
-import { Todo } from "./entities/todo.entity";
+import { Todo } from "./entities/todo.entitys";
 import { AddTodoDto } from "./dto/add-todo.dto";
 import { Response } from "express";
 import { GetPaginatedTodoDto } from "./dto/get-paginated-todo.dto";
@@ -71,9 +71,14 @@ export class TodoController {
   @Post("/file")
   setFile(@Body() data, @Res() res: Response) {
     console.log(data);
-    writeFile("testfile.doc", data.file, { encoding: "base64" }, function (err) {
-      console.log(err);
-    });
+    writeFile(
+      "testfile.doc",
+      data.file,
+      { encoding: "base64" },
+      function (err) {
+        console.log(err);
+      },
+    );
     res.status(201).json("good");
   }
 }

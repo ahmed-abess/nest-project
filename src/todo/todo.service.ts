@@ -1,11 +1,11 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { Todo } from "./entities/todo.entity";
+import { Todo } from "./entities/todo.entitys";
 import { AddTodoDto } from "./dto/add-todo.dto";
 import { GetPaginatedTodoDto } from "./dto/get-paginated-todo.dto";
 
 @Injectable()
 export class TodoService {
-  todos: Todo[];
+  todos: Todo[] = [];
 
   getTodos(): Todo[] {
     return this.todos;

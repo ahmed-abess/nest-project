@@ -1,17 +1,5 @@
-version: '3.5'
-
+version: '3.8'
 services:
-  db:
-    image: postgres
-    restart: always
-    environment:
-      - POSTGRES_PASSWORD=postgres
-    container_name: postgres
-    volumes:
-      - ./pgdata:/var/lib/postgresql/data
-    ports:
-      - '5432:5432'
-
   app:
     build:
       context: .
@@ -19,20 +7,48 @@ services:
     restart: always
     container_name: nest-docker-app
     ports:
-      - '3001:3000'
+      - '3002:3000'
     depends_on:
       - db
+    networks:
+      - backend
     volumes:
       - ./:/app/
-
-  pgadmin:
-    image: dpage/pgadmin4
-    restart: always
-    container_name: nest-pgadmin4
     environment:
-      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
-      - PGADMIN_DEFAULT_PASSWORD=pgadmin4
+      - DB_HOST=db
+      - DB_USER=$DB_USER
+      - DB_PASSWORD=$DB_ROOT_PASSWORD
+      - DB_NAME=$DB_NAME
+      - DB_PORT=$DB_PORT
+  db:
+    image: mysql:5.7
+    restart: always
+    env_file: ./.env
+    environment:
+      - MYSQL_ROOT_PASSWORD=$DB_ROOT_PASSWORD
+      - MYSQL_DATABASE=$DB_NAME
+      - MYSQL_USER=$DB_USER
+      - MYSQL_USER_PASSWORD=$DB_PASSWORD
     ports:
-      - '5050:80'
+      - ${DB_DOCKER_PORT}:${DB_DOCKER_PORT}
+    volumes:
+      - './.mysql-data/db:/var/lib/mysql'
+    networks:
+      - backend
+
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    ports:
+      - '80:80'
+    environment:
+      PMA_HOST: db
     depends_on:
       - db
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge

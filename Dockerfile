@@ -6,6 +6,6 @@ COPY . .
 
 RUN npm install
 
-RUN nest start
+#RUN npm run  start:dev
 
-CMD [ "nest", "start", "--watch" ]
+CMD [ "npm", "run", "start:dev" ]
